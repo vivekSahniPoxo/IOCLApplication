@@ -126,7 +126,7 @@
                         android:layout_marginEnd="8dp"
                         android:layout_marginBottom="8dp"
                         android:paddingLeft="20dp"
-                        android:text="Tap to Scan Book"
+                        android:text="Tap to Scan Asset"
                         android:textColor="#6c7075"
 
                         android:textSize="20dp"
@@ -151,38 +151,62 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
 
-            <Button
-                android:id="@+id/Retry"
-                android:layout_width="wrap_content"
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="10dp"
                 android:layout_marginStart="32dp"
-
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="32dp"
                 android:layout_marginEnd="32dp"
                 android:layout_marginBottom="8dp"
-                android:background="@drawable/custom_btn"
-                android:text="Retry"
-                android:textColor="@color/white"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/New_accession"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cardView3" />
-
-            <Button
-                android:id="@+id/New_accession"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginEnd="32dp"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/custom_btn"
-                android:text="New"
-                android:textColor="@color/white"
+                android:background="#FFF"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="5dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/Retry"
-                app:layout_constraintTop_toBottomOf="@+id/cardView3" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cardView3">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <Button
+                        android:id="@+id/Retry"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:background="@drawable/custom_btn"
+                        android:text="Retry"
+                        android:textColor="@color/white"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/New_accession"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <Button
+                        android:id="@+id/New_accession"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginBottom="8dp"
+                        android:background="@drawable/custom_btn"
+                        android:text="New"
+                        android:textColor="@color/white"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/Retry"
+                        app:layout_constraintTop_toBottomOf="@+id/cardView3" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardView3"
@@ -212,7 +236,7 @@
                         android:layout_marginTop="24dp"
                         android:layout_marginEnd="8dp"
                         android:fontFamily="sans-serif"
-                        android:text="Asset Id "
+                        android:text="Employee Name "
                         android:textColor="@color/Text_color"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toStartOf="@+id/Booktitle"
@@ -227,7 +251,7 @@
                         android:layout_marginTop="8dp"
                         android:layout_marginEnd="8dp"
                         android:fontFamily="sans-serif"
-                        android:text="Asset Code"
+                        android:text="Employee Id"
                         android:textColor="@color/Text_color"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toStartOf="@+id/Authorname"
@@ -274,6 +298,7 @@
                         android:text="Asset Category"
                         android:textColor="@color/Text_color"
                         android:textStyle="bold"
+                        android:visibility="gone"
                         app:layout_constraintEnd_toStartOf="@+id/BookCategory"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textView18" />
@@ -299,7 +324,7 @@
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="8dp"
                         android:fontFamily="sans-serif"
-                        android:text="Quantity"
+                        android:text="Serial Number"
                         android:textColor="@color/Text_color"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toStartOf="@+id/Publisher"
@@ -313,7 +338,7 @@
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="8dp"
                         android:fontFamily="sans-serif"
-                        android:text="Vendor"
+                        android:text="Component"
                         android:textColor="@color/Text_color"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toStartOf="@+id/Access_No"
@@ -341,7 +366,7 @@
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="8dp"
                         android:fontFamily="sans-serif"
-                        android:text="Printer Type"
+                        android:text="Asset"
                         android:textColor="@color/Text_color"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toStartOf="@+id/Item_status"
@@ -355,9 +380,10 @@
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="8dp"
                         android:fontFamily="sans-serif"
-                        android:text="Alloted Location"
+                        android:text="Rfid "
                         android:textColor="@color/Text_color"
                         android:textStyle="bold"
+                        android:visibility="gone"
                         app:layout_constraintEnd_toStartOf="@+id/Book_Add"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textView24" />
@@ -372,6 +398,7 @@
                         android:text="Alloted User"
                         android:textColor="@color/Text_color"
                         android:textStyle="bold"
+                        android:visibility="gone"
                         app:layout_constraintEnd_toStartOf="@+id/Edition"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textView25" />
@@ -386,6 +413,7 @@
                         android:text="Location"
                         android:textColor="@color/Text_color"
                         android:textStyle="bold"
+                        android:visibility="gone"
                         app:layout_constraintEnd_toStartOf="@+id/Subject_t"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textView26" />
@@ -483,6 +511,7 @@
                         android:layout_marginEnd="8dp"
                         android:text="--"
                         android:textColor="@color/Text_color"
+                        android:visibility="gone"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/textView19"
                         app:layout_constraintTop_toBottomOf="@+id/EntryDate" />
@@ -562,6 +591,7 @@
                         android:layout_marginEnd="8dp"
                         android:text="--"
                         android:textColor="@color/Text_color"
+                        android:visibility="gone"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/textView25"
                         app:layout_constraintTop_toBottomOf="@+id/Item_status" />
@@ -575,6 +605,7 @@
                         android:layout_marginEnd="8dp"
                         android:text="--"
                         android:textColor="@color/Text_color"
+                        android:visibility="gone"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/textView26"
                         app:layout_constraintTop_toBottomOf="@+id/Book_Add" />
@@ -588,6 +619,7 @@
                         android:layout_marginEnd="8dp"
                         android:text="--"
                         android:textColor="@color/Text_color"
+                        android:visibility="gone"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/textView27"
                         app:layout_constraintTop_toBottomOf="@+id/Edition" />

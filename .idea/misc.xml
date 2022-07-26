@@ -9,11 +9,16 @@
         <entry key="..\:/Users/Admin/AndroidStudioProjects/IOCLApplication/app/src/main/res/drawable/card1color.xml" value="0.18981481481481483" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/IOCLApplication/app/src/main/res/drawable/card2.xml" value="0.18981481481481483" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/IOCLApplication/app/src/main/res/drawable/card3.xml" value="0.18981481481481483" />
-        <entry key="..\:/Users/Admin/AndroidStudioProjects/IOCLApplication/app/src/main/res/layout/activity_identify.xml" value="0.1921875" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/IOCLApplication/app/src/main/res/drawable/ic_baseline_settings_24.xml" value="0.20833333333333334" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/IOCLApplication/app/src/main/res/layout/activity_app_configure_form.xml" value="0.178125" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/IOCLApplication/app/src/main/res/layout/activity_identify.xml" value="0.18" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/IOCLApplication/app/src/main/res/layout/activity_inventory.xml" value="0.1921875" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/IOCLApplication/app/src/main/res/layout/activity_main.xml" value="0.2" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/IOCLApplication/app/src/main/res/layout/activity_mapping.xml" value="0.22" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/IOCLApplication/app/src/main/res/layout/activity_search_form.xml" value="0.1921875" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/IOCLApplication/app/src/main/res/layout/activity_splash_screen.xml" value="0.1921875" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/IOCLApplication/app/src/main/res/layout/activity_view_search_item.xml" value="0.22" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/IOCLApplication/app/src/main/res/layout/activity_view_search_item_details.xml" value="0.15" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/IOCLApplication/app/src/main/res/layout/expirealertdialog.xml" value="0.1921875" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/IOCLApplication/app/src/main/res/layout/list.xml" value="0.1921875" />
       </map>

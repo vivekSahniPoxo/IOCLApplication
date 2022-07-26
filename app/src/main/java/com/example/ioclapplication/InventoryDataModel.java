@@ -1,9 +1,9 @@
 package com.example.ioclapplication;
 
-public class Data_Model_Search {
-
+public class InventoryDataModel {
     public String employee;
     public String taG_ID;
+    String asseT_ID;
     public String pO_NUMBER;
     public String asset;
     public String employeename;
@@ -12,11 +12,12 @@ public class Data_Model_Search {
     public String oem;
     public String model;
     String  StatusF="false";
-    String Color="Normal";
+    String Color;
 
-    public Data_Model_Search(String employee, String taG_ID, String pO_NUMBER, String asset, String employeename, String component, String seriaL_NO, String oem, String model) {
+    public InventoryDataModel(String employee, String taG_ID, String asseT_ID, String pO_NUMBER, String asset, String employeename, String component, String seriaL_NO, String oem, String model) {
         this.employee = employee;
         this.taG_ID = taG_ID;
+        this.asseT_ID = asseT_ID;
         this.pO_NUMBER = pO_NUMBER;
         this.asset = asset;
         this.employeename = employeename;
@@ -26,12 +27,44 @@ public class Data_Model_Search {
         this.model = model;
     }
 
+    public String getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(String employee) {
+        this.employee = employee;
+    }
+
     public String getTaG_ID() {
         return taG_ID;
     }
 
     public void setTaG_ID(String taG_ID) {
         this.taG_ID = taG_ID;
+    }
+
+    public String getAsseT_ID() {
+        return asseT_ID;
+    }
+
+    public void setAsseT_ID(String asseT_ID) {
+        this.asseT_ID = asseT_ID;
+    }
+
+    public String getpO_NUMBER() {
+        return pO_NUMBER;
+    }
+
+    public void setpO_NUMBER(String pO_NUMBER) {
+        this.pO_NUMBER = pO_NUMBER;
+    }
+
+    public String getAsset() {
+        return asset;
+    }
+
+    public void setAsset(String asset) {
+        this.asset = asset;
     }
 
     public String getEmployeename() {
@@ -58,30 +91,6 @@ public class Data_Model_Search {
         this.seriaL_NO = seriaL_NO;
     }
 
-    public String getEmployee() {
-        return employee;
-    }
-
-    public void setEmployee(String employee) {
-        this.employee = employee;
-    }
-
-
-    public String getpO_NUMBER() {
-        return pO_NUMBER;
-    }
-
-    public void setpO_NUMBER(String pO_NUMBER) {
-        this.pO_NUMBER = pO_NUMBER;
-    }
-
-    public String getAsset() {
-        return asset;
-    }
-
-    public void setAsset(String asset) {
-        this.asset = asset;
-    }
     public String getOem() {
         return oem;
     }

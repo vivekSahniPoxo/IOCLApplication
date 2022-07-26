@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -40,38 +41,98 @@ public class Adapter_list extends RecyclerView.Adapter<Adapter_list.myviewholder
 //Initial Data model
         Data_Model_Search model = list.get(position);
         holder.language.setText(model.getSeriaL_NO());
-        holder.publisher.setText(model.getModel());
-        holder.head_title.setText(model.getUniquE_ID());
-        holder.head_subject.setText(model.getAsset());
-        holder.h1.setText("Asset Id :");
-        holder.h2.setText("P.O Number :");
-        holder.h3.setText("Model :");
+        holder.publisher.setText(model.getAsset());
+        holder.head_title.setText(model.getEmployee());
+        holder.head_subject.setText(model.getEmployeename());
+        holder.h1.setText("Employee Name :");
+        holder.h2.setText("Employee ID :");
+        holder.h3.setText("Asset Name :");
         holder.h4.setText("Serial Number :");
 
 //Change color if data found
-        if (model.getColor() == "Green") {
-//            holder.cardView.setCardBackgroundColor(Color.rgb(46, 139, 87));
-            holder.ListLayout.setBackgroundColor(Color.rgb(46, 139, 87));
-            holder.head_subject.setTextColor(Color.parseColor("#FFFFFF"));
-            holder.head_title.setTextColor(Color.parseColor("#FFFFFF"));
-            holder.publisher.setTextColor(Color.parseColor("#FFFFFF"));
-            holder.language.setTextColor(Color.parseColor("#FFFFFF"));
-            holder.h4.setTextColor(Color.parseColor("#FFFFFF"));
-            holder.h3.setTextColor(Color.parseColor("#FFFFFF"));
-            holder.h2.setTextColor(Color.parseColor("#FFFFFF"));
-            holder.h1.setTextColor(Color.parseColor("#FFFFFF"));
+        String Colorname =model.getColor();
+        switch (Colorname)
+        {
+            case "Green":
 
-        } else {
-            holder.ListLayout.setBackgroundColor(Color.parseColor("#F0FFFF"));
-            holder.head_subject.setTextColor(Color.parseColor("#000000"));
-            holder.head_title.setTextColor(Color.parseColor("#000000"));
-            holder.publisher.setTextColor(Color.parseColor("#000000"));
-            holder.language.setTextColor(Color.parseColor("#000000"));
-            holder.h1.setTextColor(Color.parseColor("#000000"));
-            holder.h2.setTextColor(Color.parseColor("#000000"));
-            holder.h3.setTextColor(Color.parseColor("#000000"));
-            holder.h4.setTextColor(Color.parseColor("#000000"));
+                holder.ListLayout.setBackgroundColor(Color.rgb(46, 139, 87));
+                holder.head_subject.setTextColor(Color.parseColor("#FFFFFF"));
+                holder.head_title.setTextColor(Color.parseColor("#FFFFFF"));
+                holder.publisher.setTextColor(Color.parseColor("#FFFFFF"));
+                holder.language.setTextColor(Color.parseColor("#FFFFFF"));
+                holder.h4.setTextColor(Color.parseColor("#FFFFFF"));
+                holder.h3.setTextColor(Color.parseColor("#FFFFFF"));
+                holder.h2.setTextColor(Color.parseColor("#FFFFFF"));
+                holder.h1.setTextColor(Color.parseColor("#FFFFFF"));
+            break;
+//
+//            case "Red":
+//                holder.ListLayout.setBackgroundColor(Color.RED);
+//                holder.head_subject.setTextColor(Color.parseColor("#FFFFFF"));
+//                holder.head_title.setTextColor(Color.parseColor("#FFFFFF"));
+//                holder.publisher.setTextColor(Color.parseColor("#FFFFFF"));
+//                holder.language.setTextColor(Color.parseColor("#FFFFFF"));
+//                holder.h1.setTextColor(Color.parseColor("#FFFFFF"));
+//                holder.h2.setTextColor(Color.parseColor("#FFFFFF"));
+//                holder.h3.setTextColor(Color.parseColor("#FFFFFF"));
+//                holder.h4.setTextColor(Color.parseColor("#FFFFFF"));
+//                break;
+            case "Normal":
+                holder.ListLayout.setBackgroundColor(Color.parseColor("#F0FFFF"));
+                holder.head_subject.setTextColor(Color.BLACK);
+                holder.head_title.setTextColor(Color.BLACK);
+                holder.publisher.setTextColor(Color.BLACK);
+                holder.language.setTextColor(Color.BLACK);
+                holder.h1.setTextColor(Color.BLACK);
+                holder.h2.setTextColor(Color.BLACK);
+                holder.h3.setTextColor(Color.BLACK);
+                holder.h4.setTextColor(Color.BLACK);
+                break;
+//            holder.ListLayout.setBackgroundColor(Color.RED);
+//            holder.head_subject.setTextColor(Color.parseColor("#FFFFFF"));
+//            holder.head_title.setTextColor(Color.parseColor("#FFFFFF"));
+//            holder.publisher.setTextColor(Color.parseColor("#FFFFFF"));
+//            holder.language.setTextColor(Color.parseColor("#FFFFFF"));
+//            holder.h1.setTextColor(Color.parseColor("#FFFFFF"));
+//            holder.h2.setTextColor(Color.parseColor("#FFFFFF"));
+//            holder.h3.setTextColor(Color.parseColor("#FFFFFF"));
+//            holder.h4.setTextColor(Color.parseColor("#FFFFFF"));
+
         }
+//
+//        if (model.getColor() == "Green") {
+////            holder.cardView.setCardBackgroundColor(Color.rgb(46, 139, 87));
+//            holder.ListLayout.setBackgroundColor(Color.rgb(46, 139, 87));
+//            holder.head_subject.setTextColor(Color.parseColor("#FFFFFF"));
+//            holder.head_title.setTextColor(Color.parseColor("#FFFFFF"));
+//            holder.publisher.setTextColor(Color.parseColor("#FFFFFF"));
+//            holder.language.setTextColor(Color.parseColor("#FFFFFF"));
+//            holder.h4.setTextColor(Color.parseColor("#FFFFFF"));
+//            holder.h3.setTextColor(Color.parseColor("#FFFFFF"));
+//            holder.h2.setTextColor(Color.parseColor("#FFFFFF"));
+//            holder.h1.setTextColor(Color.parseColor("#FFFFFF"));
+//
+//        }  if (model.getColor() == "Red"){
+//            holder.ListLayout.setBackgroundColor(Color.RED);
+//            holder.head_subject.setTextColor(Color.parseColor("#FFFFFF"));
+//            holder.head_title.setTextColor(Color.parseColor("#FFFFFF"));
+//            holder.publisher.setTextColor(Color.parseColor("#FFFFFF"));
+//            holder.language.setTextColor(Color.parseColor("#FFFFFF"));
+//            holder.h1.setTextColor(Color.parseColor("#FFFFFF"));
+//            holder.h2.setTextColor(Color.parseColor("#FFFFFF"));
+//            holder.h3.setTextColor(Color.parseColor("#FFFFFF"));
+//            holder.h4.setTextColor(Color.parseColor("#FFFFFF"));
+//        }else {
+//            holder.ListLayout.setBackgroundColor(Color.parseColor("#F0FFFF"));
+//            holder.head_subject.setTextColor(Color.BLACK);
+//            holder.head_title.setTextColor(Color.BLACK);
+//            holder.publisher.setTextColor(Color.BLACK);
+//            holder.language.setTextColor(Color.BLACK);
+//            holder.h1.setTextColor(Color.BLACK);
+//            holder.h2.setTextColor(Color.BLACK);
+//            holder.h3.setTextColor(Color.BLACK);
+//            holder.h4.setTextColor(Color.BLACK);
+//        }
 
     }
 
@@ -134,11 +195,24 @@ public class Adapter_list extends RecyclerView.Adapter<Adapter_list.myviewholder
     //Method for Search
     public void getFilter(@NonNull Object search_value) {
         for (Data_Model_Search row : list) {
-            if (row.getRfidtagid() != null) {
-                if (row.getRfidtagid().equals(search_value)) {
+            if (row.getTaG_ID() != null) {
+                if (row.getTaG_ID().equals(search_value)) {
                     row.setColor("Green");
                     notifyDataSetChanged();
                     break;
+
+                }
+                else {
+//                    if (row.getColor()=="Green")
+//                    {
+//                        notifyDataSetChanged();
+//                        break;
+//
+//                    }else {
+//                        row.setColor("Red");
+//                        notifyDataSetChanged();
+//                        break;
+//                    }
                 }
 //                else {
 //                    Toast.makeText(context.getApplicationContext(), "Data Not Found", Toast.LENGTH_SHORT).show();
@@ -152,7 +226,7 @@ public class Adapter_list extends RecyclerView.Adapter<Adapter_list.myviewholder
     public void RetrySearch() {
         for (Data_Model_Search row : list) {
             if (row.getColor().equals("Green"))
-                row.setColor("White");
+                row.setColor("Normal");
             notifyDataSetChanged();
 
         }

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">IOCLApplication</string>
+    <string name="app_name">Asset Tracking System</string>
     <string name="Dialog_Text">Please Wait...</string>
 
 </resources>

@@ -1,9 +1,9 @@
 package com.example.ioclapplication;
 
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -12,7 +12,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
@@ -41,8 +40,8 @@ public class Mapping extends AppCompatActivity {
     CardView ReadingCard;
     Spinner assetId;
     Button Search, ViewDetals, Mapped;
-    String AssetKey, location, asseT_ID1,pO_DATE1;
-ProgressDialog dialog;
+    String AssetKey, location, asseT_ID1, pO_DATE1;
+    ProgressDialog dialog;
     List<String> listId;
     TextView ASSET_CODE, seriaL_NO, planT_CODE, pO_NUMBER, pO_DATE, department, asseT_ID, alloteD_TO_PLANT;
 
@@ -70,24 +69,22 @@ ProgressDialog dialog;
         dialog.setCancelable(false);
         dialog.show();
 
-
         Mapped.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                    if (result==null)
-                    {
-                        Toast.makeText(Mapping.this, "Please Read RFID tag...", Toast.LENGTH_SHORT).show();
-                    }else {
-                        try {
-                            dialog.setMessage("Mapping Tag....");
-                            dialog.setCancelable(false);
-                            dialog.show();
-                            MappingTags();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                if (result == null) {
+                    Toast.makeText(Mapping.this, "Please Read RFID tag...", Toast.LENGTH_SHORT).show();
+                } else {
+                    try {
+                        dialog.setMessage("Mapping Tag....");
+                        dialog.setCancelable(false);
+                        dialog.show();
+                        MappingTags();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
+                }
             }
         });
 
@@ -131,89 +128,85 @@ ProgressDialog dialog;
     }
 
 
-    private void FetchData(String epcvalue) throws JSONException {
-        RequestQueue queue = Volley.newRequestQueue(this);
+        private void FetchData(String epcvalue) throws JSONException {
+            RequestQueue queue = Volley.newRequestQueue(this);
+    //        String url = "http://164.52.223.163:4510/api/GetAssetInfo?Assetid=" + epcvalue;
+    //        String url = "http://mudvprfidiis:82/api/GetAssetInfo?Assetid=" + epcvalue;
+            StringRequest sr = new StringRequest(Request.Method.GET, ApiUrl.AssetIDDAta+epcvalue, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    try {
 
-        String url = "http://164.52.223.163:4510/api/GetAssetInfo?Assetid=" + epcvalue;
-        StringRequest sr = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
+                        JSONObject object = new JSONObject(response);
+                        String employee = object.optString("employee");
+                        String pO_NUMBER1 = object.optString("pO_NUMBER");
+                        String asset = object.optString("asset");
+                        String employeename = object.optString("employeename");
+                        String component = object.optString("component");
+                        String seriaL_NO1 = object.optString("seriaL_NO");
+                        String oem = object.optString("oem");
+                        String model = object.optString("model");
 
-                    JSONObject object = new JSONObject(response);
-                    String saP_ASSET_CODE1 = object.optString("saP_ASSET_CODE");
-                    String seriaL_NO1 = object.optString("seriaL_NO");
-                    String planT_CODE1 = object.optString("planT_CODE");
-                    String department1 = object.optString("department");
-                    asseT_ID1 = object.optString("asseT_ID");
-                    String alloteD_TO_PLANT1 = object.optString("alloteD_TO_PLANT");
-                    String pO_NUMBER1 = object.optString("pO_NUMBER");
-                     pO_DATE1 = object.optString("pO_DATE");
-                    location = object.optString("alloteD_TO_LOCATION");
-//
-                    String[] separated = pO_DATE1.split("T");
-                    // this will contain "Fruit"
-
-                    String date1 = separated[0];
-
-                    asseT_ID.setText(asseT_ID1);
-                    seriaL_NO.setText(seriaL_NO1);
-                    planT_CODE.setText(planT_CODE1);
-                    pO_NUMBER.setText(pO_NUMBER1);
-                    pO_DATE.setText(date1);
-                    department.setText(department1);
-                    ASSET_CODE.setText(saP_ASSET_CODE1);
-                    alloteD_TO_PLANT.setText(alloteD_TO_PLANT1);
-//                    Publisher.setText(LibraryItemType1);
-//                    RFIDNo.setText(RFIDNo1);
-//                    AccessNo.setText(Publisher1);
-//                    Author.setText(ItemStatus1);
-//                    Title.setText(Author1);
-//                    YearOfPublication.setText(YearOfPublication1);
-//                    EntryDate.setText(EntryDate1);
-                    dialog.dismiss();
+    //
+                        asseT_ID.setText(employeename);
+                        seriaL_NO.setText(employee);
+                        planT_CODE.setText(asset);
+                        pO_NUMBER.setText(seriaL_NO1);
+                        pO_DATE.setText(oem);
+                        department.setText(model);
+                        ASSET_CODE.setText(component);
+                        alloteD_TO_PLANT.setText(pO_NUMBER1);
+    ////                    Publisher.setText(LibraryItemType1);
+    //                    RFIDNo.setText(RFIDNo1);
+    //                    AccessNo.setText(Publisher1);
+    //                    Author.setText(ItemStatus1);
+    //                    Title.setText(Author1);
+    //                    YearOfPublication.setText(YearOfPublication1);
+    //                    EntryDate.setText(EntryDate1);
+                        dialog.dismiss();
 
 
-                    Log.e("response", response.toString());
-                } catch (Exception e) {
-                    Toast.makeText(Mapping.this, "No Data Found...", Toast.LENGTH_SHORT).show();
-                    e.printStackTrace();
-                    dialog.dismiss();
+                        Log.e("response", response.toString());
+                    } catch (Exception e) {
+                        Toast.makeText(Mapping.this, "No Data Found...", Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
+                        dialog.dismiss();
+                    }
+
+
                 }
-
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(Mapping.this, "No Data Found...", Toast.LENGTH_SHORT).show();
-            }
-        });
-        queue.add(sr);
-    }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(Mapping.this, "No Data Found...", Toast.LENGTH_SHORT).show();
+                }
+            });
+            queue.add(sr);
+        }
 
 
     private void FetchAssetId() {
-        String url = "http://164.52.223.163:4510/api/GetAssetId";
+//        String url = "http://164.52.223.163:4510/api/GetAssetId";
         RequestQueue queue = Volley.newRequestQueue(this);
-        StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+        StringRequest request = new StringRequest(Request.Method.GET, ApiUrl.GetAssetID, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
 
                 try {
                     JSONArray array = new JSONArray(response);
-
+                    listId.add("Select ID");
                     for (int i = 0; i < array.length(); i++) {
                         JSONObject object = array.getJSONObject(i);
                         String id = object.getString("asseT_ID");
+
                         listId.add(id);
                     }
 
                     SetupIDSpinner(listId);
-dialog.dismiss();
+                    dialog.dismiss();
                 } catch (JSONException jsonException) {
                     jsonException.printStackTrace();
-                dialog.dismiss();
+                    dialog.dismiss();
                 }
 //                    final List<String> List = new ArrayList<>(Arrays.asList(value));
 
@@ -253,12 +246,12 @@ dialog.dismiss();
     }
 
     private void MappingTags() throws JSONException {
-        String url = "http://164.52.223.163:4510/api/MapRfidTag";
+//        String url = "http://164.52.223.163:4510/api/MapRfidTag";
         JSONObject obj = new JSONObject();
         obj.put("id", "0");
         obj.put("assetId", AssetKey);
         obj.put("tagId", result);
-        obj.put("location", location);
+        obj.put("location", "0100");
         obj.put("updatetime", "2022-06-13T06:45:17.169");
 
         RequestQueue queue = Volley.newRequestQueue(this);
@@ -266,11 +259,36 @@ dialog.dismiss();
 
         final String requestBody = obj.toString();
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, response -> {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, ApiUrl.MapRfidID, response -> {
 
-            Toast.makeText(Mapping.this, ""+response, Toast.LENGTH_SHORT).show();
+            try {
+                JSONObject object = new JSONObject(response);
+                String message =object.optString("message");
+                String result=object.optString("status");
+                if (!result.matches("false")){
+                    listId.clear();
+                    FetchAssetId();
+                    asseT_ID.setText("");
+                    seriaL_NO.setText("");
+                    planT_CODE.setText("");
+                    pO_NUMBER.setText("");
+                    pO_DATE.setText("");
+                    department.setText("");
+                    ASSET_CODE.setText("");
+                    alloteD_TO_PLANT.setText("");
+                    Toast.makeText(this, ""+message, Toast.LENGTH_SHORT).show();
+                }else {
+                    Toast.makeText(this, ""+message, Toast.LENGTH_SHORT).show();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+//            Toast.makeText(Mapping.this, "" + response, Toast.LENGTH_SHORT).show();
             Log.i("VOLLEY", response);
             dialog.dismiss();
+//            listId.clear();
+//            FetchAssetId();
         }, error -> {
             Log.e("VOLLEY Negative", error.toString());
             dialog.dismiss();
@@ -292,6 +310,16 @@ dialog.dismiss();
         };
 
         queue.add(stringRequest);
+    }
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_F1://KeyEvent { action=ACTION_UP, keyCode=KEYCODE_F1, scanCode=59, metaState=0, flags=0x8, repeatCount=0, eventTime=13517236, downTime=13516959, deviceId=1, source=0x101 }
+                Scan();
+                return true;
+            default:
+                return super.onKeyUp(keyCode, event);
+        }
     }
 
 //

@@ -189,10 +189,10 @@ public class Identify extends AppCompatActivity {
 
     //Method For Fetching Data from Server
     private void FetchData(String epcvalue) throws JSONException {
-        String url = "http://164.52.223.163:4510/api/GetAssetInfoBySearch?RfidTagId=" + epcvalue;
-
+//        String url = "http://mudvprfidiis:82/api/GetAssetInfoBySearch?RfidTagId=" + epcvalue;
+//        String url = "http://164.52.223.163:4510/api/GetAssetInfoBySearch?RfidTagId=" + epcvalue;
         RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-        StringRequest jsObjRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+        StringRequest jsObjRequest = new StringRequest(Request.Method.GET, ApiUrl.IdentifyApi+epcvalue, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
@@ -204,67 +204,31 @@ public class Identify extends AppCompatActivity {
 
 
                         JSONObject object = array.getJSONObject(0);
-                        String pO_unique_id = object.getString("pO_UNIQUE_ID");
-                        String saP_ASSET_CODE = object.getString("saP_ASSET_CODE");
-                        String seriaL_NO = object.getString("seriaL_NO");
-                        String status = object.getString("status");
-                        String planT_CODE = object.getString("planT_CODE");
-                        String employee = object.getString("employee");
-                        String department = object.getString("department");
-                        String warrantY_STATUS = object.getString("warrantY_STATUS");
-                        String tracK_ID = object.getString("tracK_ID");
-                        String useR_ACK = object.getString("useR_ACK");
-                        String asseT_ID = object.getString("asseT_ID");
-                        String nonpO_BILLNO = object.getString("alloteD_TO_PLANT");
-                        String remarks = object.getString("remarks");
-                        String amC_ASSET_CATEGORY = object.getString("amC_ASSET_CATEGORY");
-                        String amC_AMOUNT = object.getString("amC_AMOUNT");
-                        String amC_AMOUNT_TOTAL = object.getString("amC_AMOUNT_TOTAL");
-                        String pmdonelq = object.getString("pmdonelq");
-                        String pmdonecq = object.getString("pmdonecq");
-                        String fmsperday = object.getString("fmsperday");
-                        String uniquE_ID = object.getString("uniquE_ID");
-                        String pO_NUMBER = object.getString("pO_NUMBER");
-                        String pO_DATE = object.getString("pO_DATE");
-                        String pO_PDF_FILE = object.getString("pO_PDF_FILE");
-                        String asset = object.getString("asset");
-                        String quantity = object.getString("quantity");
-                        String contracT_NUMBER = object.getString("contracT_NUMBER");
-                        String completioN_DATE = object.getString("completioN_DATE");
-                        String vendor = object.getString("vendor");
-                        String warrantY_PERIOD = object.getString("warrantY_PERIOD");
-                        String warrantY_START_DATE = object.getString("warrantY_START_DATE");
-                        String warrantY_END_DATE = object.getString("warrantY_END_DATE");
-                        String totaL_VALUE = object.getString("totaL_VALUE");
-                        String oem = object.getString("oem");
-                        String model = object.getString("model");
+                        String employee = object.optString("employee");
+                        String taG_ID = object.optString("taG_ID");
+                        String pO_NUMBER = object.optString("pO_NUMBER");
+                        String asset = object.optString("asset");
+                        String employeename = object.optString("employeename");
+                        String component = object.optString("component");
+                        String seriaL_NO = object.optString("seriaL_NO");
+                        String oem = object.optString("oem");
+                        String model = object.optString("model");
+                        dialog.dismiss();
 
-
-                        String ram = object.getString("ram");
-                        String hdd = object.getString("hdd");
-                        String os = object.getString("os");
-                        String printeR_TYPE = object.getString("printeR_TYPE");
-                        String nO_OF_PORTS = object.getString("nO_OF_PORTS");
-                        String alloteD_TO_LOCATION = object.getString("alloteD_TO_LOCATION");
-                        String alloteD_TO_USER = object.getString("alloteD_TO_USER");
-
-                        String misC_BILL_NO = object.getString("misC_BILL_NO");
-                        String location = object.getString("location");
-                        String asseT_STATUS = object.getString("asseT_STATUS");
 
 
                         LibraryItemType.setText(model);
-                        BookAddedIn.setText(alloteD_TO_LOCATION);
-                        BookCategory.setText(amC_ASSET_CATEGORY);
-                        ItemStatus.setText(printeR_TYPE);
-                        SubjectTitle.setText(location);
+//                        BookAddedIn.setText();
+//                        BookCategory.setText();
+                        ItemStatus.setText(asset);
+//                        SubjectTitle.setText();
                         Language.setText(pO_NUMBER);
-                        Edition.setText(alloteD_TO_USER);
-                        Publisher.setText(quantity);
+//                        Edition.setText();
+                        Publisher.setText(seriaL_NO);
 //                        RFIDNo.setText(RFIDNo1);
-                        AccessNo.setText(vendor);
-                        Author.setText(saP_ASSET_CODE);
-                        Title.setText(asseT_ID);
+                        AccessNo.setText(component);
+                        Author.setText(employee);
+                        Title.setText(employeename);
                         YearOfPublication.setText(oem);
 //                        EntryDate.setText(EntryDate1);
                         dialog.dismiss();
@@ -274,12 +238,9 @@ public class Identify extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                dialog.dismiss();
-                Toast.makeText(Identify.this, "" + error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
+        }, error -> {
+            dialog.dismiss();
+            Toast.makeText(Identify.this, "" + error.getMessage(), Toast.LENGTH_SHORT).show();
         });
 
 
