@@ -35,7 +35,7 @@
             android:layout_marginStart="32dp"
             android:layout_marginEnd="32dp"
             android:fontFamily="sans-serif"
-            android:text="Audit"
+            android:text="Inventory"
             android:textAlignment="center"
             android:textColor="@color/Text_color"
             android:textSize="20dp"

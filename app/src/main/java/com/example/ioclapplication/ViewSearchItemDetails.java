@@ -36,9 +36,10 @@ public class ViewSearchItemDetails extends AppCompatActivity {
     ModelViewDetails data_models;
     TextView Searchk;
     Button Searchbutton;
-    String Datevalue="no";
+    String Datevalue = "no";
     final Calendar myCalendar = Calendar.getInstance();
     ProgressDialog dialog;
+    DetailsViewItem adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,16 +57,19 @@ public class ViewSearchItemDetails extends AppCompatActivity {
 
         };
         dialog = new ProgressDialog(this);
-//        dialog.show();
-//        dialog = new ProgressDialog(this);
-//        dialog.setMessage("Fetching Data...");
+
 
 
         Searchbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (!Datevalue.matches("no")) {
+
                     FetchAssetId();
+
+        dialog.setMessage("Fetching Data...");
+        dialog.setCancelable(false);
+                    dialog.show();
                 } else {
                     Toast.makeText(ViewSearchItemDetails.this, "please Select Date ", Toast.LENGTH_SHORT).show();
                 }
@@ -103,17 +107,18 @@ public class ViewSearchItemDetails extends AppCompatActivity {
 
     private void FetchAssetId() {
         LocalDB localDB = new LocalDB(this);
-      List<DatamodelLocal>  listdb = localDB.getAllContacts();
+        List<DatamodelLocal> listdb = localDB.getAllContacts();
         String devicename = listdb.get(0).getDeviceName();
 //        String url = "http://164.52.223.163:4510/api/ReadRfidByDate?Date=" + Datevalue;
 //        String url="http://164.52.223.163:4510/api/ReadRfidByDate?Date="+Datevalue.concat("&HHRID=")+devicename;
         RequestQueue queue = Volley.newRequestQueue(this);
-        StringRequest request = new StringRequest(Request.Method.GET, ApiUrl.ScannedItemList+Datevalue.concat("&HHRID=")+devicename, new Response.Listener<String>() {
+        StringRequest request = new StringRequest(Request.Method.GET, ApiUrl.ScannedItemList + Datevalue.concat("&HHRID=") + devicename, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
 
                 try {
                     JSONArray array = new JSONArray(response);
+                    list.clear();
                     if (array.length() > 0) {
                         for (int i = 0; i < array.length(); i++) {
                             JSONObject object = array.getJSONObject(i);
@@ -126,9 +131,11 @@ public class ViewSearchItemDetails extends AppCompatActivity {
                             String assetid = object.optString("asset_Id");
                             list.add(new ModelViewDetails(id, tagid, location, hhrId, readTime, assetid, assetName));
                         }
-                        DetailsViewItem adapter = new DetailsViewItem(getApplicationContext(), list);
+
+                        adapter = new DetailsViewItem(getApplicationContext(), list);
                         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
                         recyclerView.setAdapter(adapter);
+
 //                        RearrangeItems();
                         dialog.dismiss();
                     } else {

@@ -1,6 +1,7 @@
 package com.example.ioclapplication;
 
 import android.app.ProgressDialog;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -12,6 +13,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
@@ -31,6 +33,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -245,14 +249,17 @@ public class Mapping extends AppCompatActivity {
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void MappingTags() throws JSONException {
 //        String url = "http://164.52.223.163:4510/api/MapRfidTag";
-        JSONObject obj = new JSONObject();
-        obj.put("id", "0");
-        obj.put("assetId", AssetKey);
-        obj.put("tagId", result);
-        obj.put("location", "0100");
-        obj.put("updatetime", "2022-06-13T06:45:17.169");
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+            LocalDateTime now = LocalDateTime.now();
+            JSONObject obj = new JSONObject();
+            obj.put("id", "0");
+            obj.put("assetId", AssetKey);
+            obj.put("tagId", result);
+            obj.put("location", "0100");
+            obj.put("updatetime", now);
 
         RequestQueue queue = Volley.newRequestQueue(this);
 

@@ -44,7 +44,7 @@ public class DetailsViewItem extends RecyclerView.Adapter<DetailsViewItem.MYview
         String date1 = separated[0];
         String date2 = separated[1];
         holder.language.setText(model.getHhrId());
-        holder.publisher.setText( date1.concat(" "+date2));
+        holder.publisher.setText(date1.concat(" " + date2));
         holder.head_title.setText(model.getAssetId());
         holder.head_subject.setText(model.getAssetname());
         holder.h1.setText("Asset Name :");
