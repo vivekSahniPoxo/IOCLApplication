@@ -43,7 +43,7 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.view
         holder.h1.setText("Employee Name :");
         holder.h2.setText("Employee ID :");
         holder.h3.setText("Asset Name :");
-        holder.h4.setText("OEM :");
+        holder.h4.setText("Serial No :");
 
         //Change color if data found
         if (model.getColor() == "Green") {

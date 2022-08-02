@@ -108,7 +108,17 @@ public class ViewSearchItemDetails extends AppCompatActivity {
     private void FetchAssetId() {
         LocalDB localDB = new LocalDB(this);
         List<DatamodelLocal> listdb = localDB.getAllContacts();
-        String devicename = listdb.get(0).getDeviceName();
+        String devicename = "";
+        try {
+            devicename= listdb.get(0).getDeviceName();
+        }catch (Exception e )
+        {
+            if (devicename.length()==0)
+            {
+                devicename="SD60RT";
+            }
+            e.printStackTrace();
+        }
 //        String url = "http://164.52.223.163:4510/api/ReadRfidByDate?Date=" + Datevalue;
 //        String url="http://164.52.223.163:4510/api/ReadRfidByDate?Date="+Datevalue.concat("&HHRID=")+devicename;
         RequestQueue queue = Volley.newRequestQueue(this);

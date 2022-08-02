@@ -81,10 +81,13 @@ public class Mapping extends AppCompatActivity {
                     Toast.makeText(Mapping.this, "Please Read RFID tag...", Toast.LENGTH_SHORT).show();
                 } else {
                     try {
-                        dialog.setMessage("Mapping Tag....");
-                        dialog.setCancelable(false);
-                        dialog.show();
-                        MappingTags();
+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            MappingTags();
+                            dialog.setMessage("Mapping Tag....");
+                            dialog.setCancelable(false);
+                            dialog.show();
+                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -119,6 +122,7 @@ public class Mapping extends AppCompatActivity {
             }
         });
         iuhfService = UHFManager.getUHFService(this);
+        iuhfService.setAntennaPower(5);
         iuhfService.setOnInventoryListener(var1 -> {
             epc = var1.getEpc();
         });

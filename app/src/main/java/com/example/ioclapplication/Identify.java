@@ -69,6 +69,7 @@ public class Identify extends AppCompatActivity {
         EntryDate = findViewById(R.id.EntryDate);
 
         iuhfService = UHFManager.getUHFService(this);
+        iuhfService.setAntennaPower(5);
         tempList = new ArrayList<>();
         iuhfService.setAntennaPower(10);
         iuhfService.setOnInventoryListener(var1 -> {
@@ -112,6 +113,7 @@ public class Identify extends AppCompatActivity {
 //                    iuhfService.closeDev();
 //                    Toast.makeText(Identify_Form.this, "Start Fetching Data...", Toast.LENGTH_SHORT).show();
                     if (result != null) {
+                        Toast.makeText(Identify.this, ""+result, Toast.LENGTH_SHORT).show();
                         FetchData(result);
                         dialog.show();
                         dialog.setMessage(getString(R.string.Dialog_Text));

@@ -205,11 +205,15 @@ public class Inventory extends AppCompatActivity {
 
                 try {
                     if (list.size() > 0) {
-
-                        submit_Report();
-                        dialog.show();
-                        dialog.setMessage(getString(R.string.Dialog_Text));
-                        dialog.setCancelable(false);
+                        String textvla = (String) Search.getText();
+                        if (textvla.matches("Start")) {
+                            submit_Report();
+                            dialog.show();
+                            dialog.setMessage(getString(R.string.Dialog_Text));
+                            dialog.setCancelable(false);
+                        } else {
+                            Toast.makeText(Inventory.this, "Please Stop Scanning ....", Toast.LENGTH_SHORT).show();
+                        }
 
                     } else {
                         Toast.makeText(Inventory.this, "NO Data in list", Toast.LENGTH_SHORT).show();
@@ -256,6 +260,7 @@ public class Inventory extends AppCompatActivity {
                         String oem = object.optString("oem");
                         String location = object.optString("location");
                         String model = object.optString("model");
+                        String SErialNo = object.optString("seriaL_NO");
 
 //                        localDB.addContact(new SearchDataModel(auditid, rfidNo, status, assetId, assetName, assetTag, serialNo, model, category, assetStatus, company, manufacturer, location, purchaseCost, supplier, orderNo, purchaseDate, notes));
                         Back_Btn.setEnabled(true);
@@ -263,7 +268,7 @@ public class Inventory extends AppCompatActivity {
                         TempList_Inventory.add(taG_ID);
 
 //                        setuplist(TempList_Inventory);
-                        list.add(new InventoryDataModel(employee, taG_ID, asseT_ID, pO_NUMBER, asset, employeename, component, oem, location, model));
+                        list.add(new InventoryDataModel(employee, taG_ID, asseT_ID, pO_NUMBER, asset, employeename, component, SErialNo, location, model));
                         adapter = new InventoryAdapter(TempList_Inventory, list, getApplicationContext());
                         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
                         recyclerView.setAdapter(adapter);
@@ -336,7 +341,17 @@ public class Inventory extends AppCompatActivity {
 
     private void submit_Report() throws JSONException {
         listdb = localDB.getAllContacts();
-        String devicename = listdb.get(0).getDeviceName();
+        String devicename = "";
+        try {
+            devicename = listdb.get(0).getDeviceName();
+        } catch (Exception e) {
+            if (devicename.length() == 0) {
+                devicename = "SD60RT";
+            }
+            e.printStackTrace();
+        }
+
+
         JSONObject object = new JSONObject();
 
         JSONArray array = new JSONArray();
