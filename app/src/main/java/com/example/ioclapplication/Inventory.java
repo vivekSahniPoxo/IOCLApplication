@@ -394,6 +394,8 @@ public class Inventory extends AppCompatActivity {
             Toast.makeText(Inventory.this, response, Toast.LENGTH_SHORT).show();
             Clear();
             Log.i("VOLLEY Submit", response);
+            startActivity(new Intent(Inventory.this,MainActivity.class));
+            finish();
             dialog.dismiss();
         }, error -> {
             try {

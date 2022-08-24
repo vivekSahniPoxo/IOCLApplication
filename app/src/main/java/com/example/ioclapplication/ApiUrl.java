@@ -13,5 +13,7 @@ public class ApiUrl {
     public static final String ScannedItemList = baseUrl + "ReadRfidByDate?Date=";
     public static final String GetMappedITem = baseUrl + "GetMapedItems";
     public static final String WriteRfidDetails = baseUrl + "WriteRfidTagDetails";
+    public static final String LocationID = baseUrl + "GetLocation";
+    public static final String UpdateLocation = baseUrl + "UpdateLocation";
 }
 

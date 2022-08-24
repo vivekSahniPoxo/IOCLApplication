@@ -362,13 +362,9 @@ public class SearchForm extends AppCompatActivity {
 
     private void submit_Report() throws JSONException {
 
-        //Getting Shared Data
-//        String rfid = sh.getString("RFID NO", null);
-//        String status = sh.getString("Status", null);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss z");
         String currentDateandTime = sdf.format(new Date());
-//        String dt_str = "2000-01-01T13:00:00.000Z";
-//        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+
 
 
         String url = "http://164.52.223.163:4510/api/WriteRfidTagDetails";

@@ -78,8 +78,14 @@ public class Mapping extends AppCompatActivity {
             public void onClick(View view) {
 
                 if (result == null) {
+
                     Toast.makeText(Mapping.this, "Please Read RFID tag...", Toast.LENGTH_SHORT).show();
-                } else {
+                }
+                else if(result.endsWith("FF04EE")){
+                    Toast.makeText(Mapping.this, "Keep the Tag Closer to Reader...", Toast.LENGTH_SHORT).show();
+
+                }
+                else {
                     try {
 
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -109,6 +115,7 @@ public class Mapping extends AppCompatActivity {
             public void onClick(View view) {
                 try {
                     if (AssetKey.length() > 0) {
+
                         FetchData(AssetKey);
                         dialog.setMessage("Fetch data....");
                         dialog.setCancelable(false);
@@ -130,9 +137,18 @@ public class Mapping extends AppCompatActivity {
     }
 
     private void Scan() {
+        String Datavalue="";
         iuhfService.openDev();
-        result = iuhfService.read_area(1, "2", "6", "00000000");
-        Toast.makeText(Mapping.this, "" + result, Toast.LENGTH_SHORT).show();
+        Datavalue = iuhfService.read_area(1, "2", "6", "00000000");
+       if (Datavalue.endsWith("FF04EE"))
+       {
+           Toast.makeText(Mapping.this, "Keep the Tag Closer to Reader...", Toast.LENGTH_SHORT).show();
+
+       }else {
+           result=Datavalue;
+           Toast.makeText(Mapping.this, "" + result, Toast.LENGTH_SHORT).show();
+       }
+
     }
 
 
@@ -287,6 +303,7 @@ public class Mapping extends AppCompatActivity {
                     department.setText("");
                     ASSET_CODE.setText("");
                     alloteD_TO_PLANT.setText("");
+
                     Toast.makeText(this, ""+message, Toast.LENGTH_SHORT).show();
                 }else {
                     Toast.makeText(this, ""+message, Toast.LENGTH_SHORT).show();
@@ -333,5 +350,10 @@ public class Mapping extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        iuhfService=UHFManager.getUHFService(Mapping.this);
+    }
 //
 }

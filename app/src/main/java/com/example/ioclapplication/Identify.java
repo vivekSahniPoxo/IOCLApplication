@@ -2,6 +2,7 @@ package com.example.ioclapplication;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -17,7 +18,6 @@ import androidx.cardview.widget.CardView;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.speedata.libuhf.IUHFService;
@@ -34,13 +34,16 @@ public class Identify extends AppCompatActivity {
 
     Button Search, NEW_data, Retry;
     //    EditText search_key;
-    TextView LibraryItemType, BookAddedIn, BookCategory, ItemStatus, SubjectTitle, Language, Edition, Publisher, RFIDNo, AccessNo, Author, Title, YearOfPublication, EntryDate;
+    TextView LibraryItemType, BookAddedIn, BookCategory, ItemStatus, SubjectTitle, Language, Edition, Publisher, RFIDNo, AccessNo, Author, Title, YearOfPublication, EntryDate, Seatno1, Cubial11, Floor, Cabin;
     ProgressDialog dialog;
     CardView scan_button;
     IUHFService iuhfService;
     public List<String> tempList;
     String epc;
+    String userID = null;
     String result;
+    String employee=null,seat1="--";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +70,27 @@ public class Identify extends AppCompatActivity {
         Title = findViewById(R.id.Booktitle);
         YearOfPublication = findViewById(R.id.YearOfPublication);
         EntryDate = findViewById(R.id.EntryDate);
+        Seatno1 = findViewById(R.id.Seattxt);
+        Floor = findViewById(R.id.floor);
+        Cabin = findViewById(R.id.Cabintxt);
+        Cubial11 = findViewById(R.id.cubicaltxt);
+
+
+        Seatno1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (seat1.matches("--"))
+                {
+                    Toast.makeText(Identify.this, "Scan Tag first....", Toast.LENGTH_SHORT).show();
+                }else {
+                    Intent i = new Intent(Identify.this, UpdateLocation.class);
+                    i.putExtra("UserID", employee);
+                    startActivity(i);
+                    finish();
+                }
+            }
+        });
+
 
         iuhfService = UHFManager.getUHFService(this);
         iuhfService.setAntennaPower(5);
@@ -113,17 +137,14 @@ public class Identify extends AppCompatActivity {
 //                    iuhfService.closeDev();
 //                    Toast.makeText(Identify_Form.this, "Start Fetching Data...", Toast.LENGTH_SHORT).show();
                     if (result != null) {
-                        Toast.makeText(Identify.this, ""+result, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Identify.this, "" + result, Toast.LENGTH_SHORT).show();
                         FetchData(result);
                         dialog.show();
                         dialog.setMessage(getString(R.string.Dialog_Text));
                         dialog.setCancelable(false);
                     } else {
 
-                        dialog.setMessage("List Already Clear");
-                        dialog.setCancelable(true);
-                        dialog.show();
-
+                        Toast.makeText(Identify.this, "Scan Tag Again...", Toast.LENGTH_SHORT).show();
                     }
 
                 } catch (JSONException e) {
@@ -151,6 +172,8 @@ public class Identify extends AppCompatActivity {
                         .show();
             }
         });
+
+
         Search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -185,7 +208,10 @@ public class Identify extends AppCompatActivity {
         Title.setText("--");
         YearOfPublication.setText("--");
         EntryDate.setText("--");
-
+        Floor.setText("--");
+        Cabin.setText("--");
+        Cubial11.setText("--");
+        Seatno1.setText("--");
 
     }
 
@@ -194,7 +220,7 @@ public class Identify extends AppCompatActivity {
 //        String url = "http://mudvprfidiis:82/api/GetAssetInfoBySearch?RfidTagId=" + epcvalue;
 //        String url = "http://164.52.223.163:4510/api/GetAssetInfoBySearch?RfidTagId=" + epcvalue;
         RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-        StringRequest jsObjRequest = new StringRequest(Request.Method.GET, ApiUrl.IdentifyApi+epcvalue, new Response.Listener<String>() {
+        StringRequest jsObjRequest = new StringRequest(Request.Method.GET, ApiUrl.IdentifyApi + epcvalue, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
@@ -206,7 +232,7 @@ public class Identify extends AppCompatActivity {
 
 
                         JSONObject object = array.getJSONObject(0);
-                        String employee = object.optString("employee");
+                         employee = object.optString("employee");
                         String taG_ID = object.optString("taG_ID");
                         String pO_NUMBER = object.optString("pO_NUMBER");
                         String asset = object.optString("asset");
@@ -215,8 +241,14 @@ public class Identify extends AppCompatActivity {
                         String seriaL_NO = object.optString("seriaL_NO");
                         String oem = object.optString("oem");
                         String model = object.optString("model");
-                        dialog.dismiss();
+                        userID = object.optString("useR_ID");
+                        String wing = object.optString("wing");
+                        String floor = object.optString("floor");
+                        String cabin = object.optString("cabin");
+                         seat1 = object.optString("seaT_NO");
+                        String cubical = object.optString("cubical");
 
+                        dialog.dismiss();
 
 
                         LibraryItemType.setText(model);
@@ -232,6 +264,10 @@ public class Identify extends AppCompatActivity {
                         Author.setText(employee);
                         Title.setText(employeename);
                         YearOfPublication.setText(oem);
+                        Floor.setText(floor);
+                        Cabin.setText(cabin);
+                        Cubial11.setText(cubical);
+                        Seatno1.setText(seat1);
 //                        EntryDate.setText(EntryDate1);
                         dialog.dismiss();
                     }
@@ -253,7 +289,7 @@ public class Identify extends AppCompatActivity {
     private void Scan() {
         iuhfService.openDev();
         result = iuhfService.read_area(1, "2", "6", "00000000");
-
+//        Toast.makeText(Identify.this, ""+result, Toast.LENGTH_SHORT).show();
         if (result != null) {
             try {
 //                    Toast.makeText(Identify_Form.this, epc, Toast.LENGTH_SHORT).show();
@@ -281,4 +317,6 @@ public class Identify extends AppCompatActivity {
                 return super.onKeyUp(keyCode, event);
         }
     }
+
+
 }
