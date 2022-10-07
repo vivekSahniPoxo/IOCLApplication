@@ -131,7 +131,8 @@ public class Inventory extends AppCompatActivity {
         };
         looperDemo = new LooperDemo();
         iuhfService = UHFManager.getUHFService(this);
-        iuhfService.setAntennaPower(30);
+//        iuhfService.setAntennaPower(30);
+        iuhfService.setFrequency(865);
 
         Search.setOnClickListener(v -> {
             Button b = (Button) v;
