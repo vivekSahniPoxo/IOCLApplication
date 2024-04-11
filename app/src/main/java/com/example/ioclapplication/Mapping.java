@@ -3,6 +3,8 @@ package com.example.ioclapplication;
 import android.app.ProgressDialog;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -27,6 +29,10 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.speedata.libuhf.IUHFService;
 import com.speedata.libuhf.UHFManager;
+import com.speedata.libuhf.bean.SpdReadData;
+import com.speedata.libuhf.interfaces.OnSpdReadListener;
+import com.speedata.libuhf.utils.ErrorStatus;
+import com.speedata.libuhf.utils.StringUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -47,12 +53,15 @@ public class Mapping extends AppCompatActivity {
     String AssetKey, location, asseT_ID1, pO_DATE1;
     ProgressDialog dialog;
     List<String> listId;
+    Handler handler;
+    String Datavalue="";
     TextView ASSET_CODE, seriaL_NO, planT_CODE, pO_NUMBER, pO_DATE, department, asseT_ID, alloteD_TO_PLANT;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mapping);
+        handler = new Handler();
         ReadingCard = findViewById(R.id.button_Scan);
         assetId = findViewById(R.id.spinner2value);
         Search = findViewById(R.id.Stop_Search);
@@ -106,7 +115,7 @@ public class Mapping extends AppCompatActivity {
         ReadingCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Scan();
+                Scan(Datavalue);
             }
         });
 
@@ -128,18 +137,20 @@ public class Mapping extends AppCompatActivity {
                 }
             }
         });
-        iuhfService = UHFManager.getUHFService(this);
-        iuhfService.setAntennaPower(5);
-        iuhfService.setOnInventoryListener(var1 -> {
-            epc = var1.getEpc();
-        });
+//        iuhfService = UHFManager.getUHFService(this);
+//        iuhfService.setAntennaPower(5);
+//        iuhfService.setOnInventoryListener(var1 -> {
+//            epc = var1.getEpc();
+//        });
 
     }
 
-    private void Scan() {
-        String Datavalue="";
-        iuhfService.openDev();
-        Datavalue = iuhfService.read_area(1, "2", "6", "00000000");
+    private void Scan(String epc) {
+
+        Datavalue = epc;
+//
+//        iuhfService.openDev();
+//        Datavalue = iuhfService.read_area(1, "2", "6", "00000000");
        if (Datavalue.endsWith("FF04EE"))
        {
            Toast.makeText(Mapping.this, "Keep the Tag Closer to Reader...", Toast.LENGTH_SHORT).show();
@@ -342,8 +353,46 @@ public class Mapping extends AppCompatActivity {
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         switch (keyCode) {
-            case KeyEvent.KEYCODE_F1://KeyEvent { action=ACTION_UP, keyCode=KEYCODE_F1, scanCode=59, metaState=0, flags=0x8, repeatCount=0, eventTime=13517236, downTime=13516959, deviceId=1, source=0x101 }
-                Scan();
+            case KeyEvent.KEYCODE_F1:
+            case  KeyEvent.KEYCODE_BUTTON_R2:
+
+
+                iuhfService.setOnReadListener(new OnSpdReadListener() {
+                    @Override
+                    public void getReadData(SpdReadData var1) {
+                        StringBuilder stringBuilder = new StringBuilder();
+                        byte[] epcData = var1.getEPCData();
+                        String hexString = StringUtils.byteToHexString(epcData, var1.getEPCLen());
+                        if (!TextUtils.isEmpty(hexString)) {
+                            stringBuilder.append("EPC：").append(hexString).append("\n");
+                        } else if (var1.getStatus() == 0) {
+                            byte[] readData = var1.getReadData();
+                            String readHexString = StringUtils.byteToHexString(readData, var1.getDataLen());
+                            stringBuilder.append("ReadData:").append(readHexString).append("\n");
+                            Toast.makeText(Mapping.this, readHexString, Toast.LENGTH_SHORT).show();
+
+
+                            Datavalue=readHexString;
+                            epc = readHexString;
+                            Scan(Datavalue);
+
+
+                        } else {
+                            stringBuilder.append(getResources().getString(R.string.read_fail))
+                                    .append(":").append(ErrorStatus.getErrorStatus(Mapping.this, var1.getStatus()))
+                                    .append("\n");
+                            handler.sendMessage(handler.obtainMessage(1, stringBuilder.toString()));
+                        }
+                    }
+                });
+
+                Integer readArea = iuhfService.readArea(1, 2, 6, "00000000");
+                if (readArea != null && readArea != 0) {
+                    String err = getResources().getString(R.string.read_fail) + ":" +
+                            ErrorStatus.getErrorStatus(getApplicationContext(), readArea) + "\n";
+                    handler.sendMessage(handler.obtainMessage(1, err));
+                }
+
                 return true;
             default:
                 return super.onKeyUp(keyCode, event);

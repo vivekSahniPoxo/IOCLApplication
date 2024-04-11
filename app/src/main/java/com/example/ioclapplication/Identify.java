@@ -1,9 +1,12 @@
 package com.example.ioclapplication;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -22,6 +25,10 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.speedata.libuhf.IUHFService;
 import com.speedata.libuhf.UHFManager;
+import com.speedata.libuhf.bean.SpdReadData;
+import com.speedata.libuhf.interfaces.OnSpdReadListener;
+import com.speedata.libuhf.utils.ErrorStatus;
+import com.speedata.libuhf.utils.StringUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -43,13 +50,14 @@ public class Identify extends AppCompatActivity {
     String userID = null;
     String result;
     String employee=null,seat1="--";
+    Handler handler;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_identify);
-
+        handler = new Handler();
         //Binding Components
         scan_button = findViewById(R.id.button_Scan);
 //        search_key = findViewById(R.id.Search_key);
@@ -96,28 +104,11 @@ public class Identify extends AppCompatActivity {
         iuhfService.setAntennaPower(5);
         tempList = new ArrayList<>();
         iuhfService.setAntennaPower(10);
-        iuhfService.setOnInventoryListener(var1 -> {
-//                    tempList.add(var1.getEpc());
-//                    System.out.println("List Data" + tempList);
-            epc = var1.getEpc();
-//            if (epc != null) {
-////                try {
-//////                    Toast.makeText(Identify_Form.this, epc, Toast.LENGTH_SHORT).show();
-////                    //Toast.makeText(Identify_Form.this, "Start Fetching Data...", Toast.LENGTH_SHORT).show();
-//////                    FetchData(epc);
-////                    //Toast.makeText(Identify_Form.this, "Method Called", Toast.LENGTH_SHORT).show();
-//////                    dialog.show();
-//////                    dialog.setMessage(getString(R.string.Dialog_Text));
-//////                    dialog.setCancelable(false);
-////                    iuhfService.inventoryStop();
-////                    //Toast.makeText(Identify_Form.this, "Inventory Stopped", Toast.LENGTH_SHORT).show();
-////                    iuhfService.closeDev();
-////                } catch (JSONException e) {
-////                    e.printStackTrace();
-////                }
-//            }
-            //Toast.makeText(Identify_Form.this, epc, Toast.LENGTH_SHORT).show();
-        });
+//        iuhfService.setOnInventoryListener(var1 -> {
+//
+//            epc = var1.getEpc();
+//
+//        });
         //Initialize of Dialog Box
         dialog = new ProgressDialog(this);
 
@@ -125,7 +116,7 @@ public class Identify extends AppCompatActivity {
         scan_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Scan();
+                Scan(result);
             }
         });
 
@@ -286,9 +277,9 @@ public class Identify extends AppCompatActivity {
 
     }
 
-    private void Scan() {
-        iuhfService.openDev();
-        result = iuhfService.read_area(1, "2", "6", "00000000");
+    private void Scan(String epc) {
+//        iuhfService.openDev();
+//        result = iuhfService.read_area(1, "2", "6", "00000000");
 //        Toast.makeText(Identify.this, ""+result, Toast.LENGTH_SHORT).show();
         if (result != null) {
             try {
@@ -298,8 +289,8 @@ public class Identify extends AppCompatActivity {
                 dialog.show();
                 dialog.setMessage(getString(R.string.Dialog_Text));
                 dialog.setCancelable(false);
-                iuhfService.inventoryStop();
-                iuhfService.closeDev();
+//                iuhfService.inventoryStop();
+//                iuhfService.closeDev();
             } catch (JSONException e) {
                 e.printStackTrace();
 
@@ -310,11 +301,82 @@ public class Identify extends AppCompatActivity {
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         switch (keyCode) {
-            case KeyEvent.KEYCODE_F1://KeyEvent { action=ACTION_UP, keyCode=KEYCODE_F1, scanCode=59, metaState=0, flags=0x8, repeatCount=0, eventTime=13517236, downTime=13516959, deviceId=1, source=0x101 }
-                Scan();
+            case KeyEvent.KEYCODE_F1:
+            case KeyEvent.KEYCODE_BUTTON_R2:
+
+                iuhfService.setOnReadListener(new OnSpdReadListener() {
+                    @Override
+                    public void getReadData(SpdReadData var1) {
+                        StringBuilder stringBuilder = new StringBuilder();
+                        byte[] epcData = var1.getEPCData();
+                        String hexString = StringUtils.byteToHexString(epcData, var1.getEPCLen());
+                        if (!TextUtils.isEmpty(hexString)) {
+                            stringBuilder.append("EPC：").append(hexString).append("\n");
+                        } else if (var1.getStatus() == 0) {
+                            byte[] readData = var1.getReadData();
+                            String readHexString = StringUtils.byteToHexString(readData, var1.getDataLen());
+                            stringBuilder.append("ReadData:").append(readHexString).append("\n");
+                            Toast.makeText(Identify.this, readHexString, Toast.LENGTH_SHORT).show();
+
+
+                            result=readHexString;
+                            epc = readHexString;
+                            Scan(result);
+//                    resultValue.setVisibility(View.VISIBLE);
+//                    resultValue.setText(resultV);
+
+                        } else {
+                            stringBuilder.append(getResources().getString(R.string.read_fail))
+                                    .append(":").append(ErrorStatus.getErrorStatus(Identify.this, var1.getStatus()))
+                                    .append("\n");
+                            handler.sendMessage(handler.obtainMessage(1, stringBuilder.toString()));
+                        }
+                    }
+                });
+
+                Integer readArea = iuhfService.readArea(1, 2, 6, "00000000");
+                if (readArea != null && readArea != 0) {
+                    String err = getResources().getString(R.string.read_fail) + ":" +
+                            ErrorStatus.getErrorStatus(getApplicationContext(), readArea) + "\n";
+                    handler.sendMessage(handler.obtainMessage(1, err));
+                }
+                //Scan();
                 return true;
             default:
                 return super.onKeyUp(keyCode, event);
+        }
+    }
+
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        stopInventoryService();
+    }
+
+    private void stopInventoryService() {
+        iuhfService.closeDev();
+
+    }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        initializeUHF();
+    }
+
+    @SuppressLint("ResourceAsColor")
+    private void initializeUHF() {
+        try {
+            iuhfService = UHFManager.getUHFService(this);
+            iuhfService.openDev();
+            iuhfService.setAntennaPower(30);
+
+            // iuhfService.setFrequency(2);
+
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(),e.toString(),Toast.LENGTH_SHORT).show();
         }
     }
 

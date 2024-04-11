@@ -28,7 +28,8 @@ public class SplashScreen extends AppCompatActivity {
         t1=findViewById(R.id.textView35);
         t2=findViewById(R.id.textView37);
 
-        GregorianCalendar expDate = new GregorianCalendar(2022, 11, 1); // midnight
+        GregorianCalendar expDate = new GregorianCalendar(2024, 4, 1);
+        //GregorianCalendar expDate = new GregorianCalendar(2023, 10, 1); // midnight
         GregorianCalendar now = new GregorianCalendar();//Note: Months are 0-based. January = 0, December = 11.
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd");

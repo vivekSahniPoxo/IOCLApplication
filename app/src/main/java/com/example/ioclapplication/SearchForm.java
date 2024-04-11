@@ -1,6 +1,7 @@
 package com.example.ioclapplication;
 
 import android.app.ProgressDialog;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -29,6 +30,8 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.speedata.libuhf.IUHFService;
 import com.speedata.libuhf.UHFManager;
+import com.speedata.libuhf.bean.SpdInventoryData;
+import com.speedata.libuhf.interfaces.OnSpdInventoryListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -43,7 +46,9 @@ import java.util.Date;
 import java.util.List;
 
 public class SearchForm extends AppCompatActivity {
-
+    long lastTimeMillis;
+    private int soundId;
+    private SoundPool soundPool;
     Button add_accession_btn, Search_btn, retry_btn, stop_btn, New_, SubmitDetails;
     EditText accession_no;
     String buttonText;
@@ -321,18 +326,51 @@ public class SearchForm extends AppCompatActivity {
             iuhfService.inventoryStart();
             Search_btn.setText("STOP");
             add_accession_btn.setEnabled(false);
-            iuhfService.setOnInventoryListener(var1 -> {
-//
-//                System.out.println("Start Reading" + tempList);
-                //if (Search_btn.getText()=="Start")
 
-                result = var1.getEpc();
-                looperDemo.execute(() -> {
-                    Message message = Message.obtain();
-                    message.obj = result;
-                    handler.sendMessage(message);
-                });
+            iuhfService.setOnInventoryListener(new OnSpdInventoryListener() {
+                @Override
+                public void getInventoryData(SpdInventoryData var1) {
+                    result = var1.getEpc();
+                    looperDemo.execute(() -> {
+                        Message message = Message.obtain();
+                        message.obj = result;
+                        handler.sendMessage(message);
+                    });
+
+                    try {
+                        long timeMillis = System.currentTimeMillis();
+                        long l = timeMillis - lastTimeMillis;
+                        if (l < 100) {
+                            return;
+                        }
+                        lastTimeMillis = System.currentTimeMillis();
+                        soundPool.play(soundId, 1, 1, 0, 0, 1);
+
+
+                    } catch (Exception e){
+                        Log.d("exception",e.toString());
+                    }
+                }
+
+                @Override
+                public void onInventoryStatus(int i) {
+
+                }
             });
+
+
+//            iuhfService.setOnInventoryListener(var1 -> {
+////
+////                System.out.println("Start Reading" + tempList);
+//                //if (Search_btn.getText()=="Start")
+//
+//                result = var1.getEpc();
+//                looperDemo.execute(() -> {
+//                    Message message = Message.obtain();
+//                    message.obj = result;
+//                    handler.sendMessage(message);
+//                });
+//            });
 
         } else {
             add_accession_btn.setEnabled(true);

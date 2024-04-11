@@ -1,7 +1,9 @@
 package com.example.ioclapplication;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -29,6 +31,8 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.speedata.libuhf.IUHFService;
 import com.speedata.libuhf.UHFManager;
+import com.speedata.libuhf.bean.SpdInventoryData;
+import com.speedata.libuhf.interfaces.OnSpdInventoryListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -44,6 +48,10 @@ import java.util.Date;
 import java.util.List;
 
 public class Inventory extends AppCompatActivity {
+
+    long lastTimeMillis;
+    private int soundId;
+    private SoundPool soundPool;
     RecyclerView recyclerView;
     List<InventoryDataModel> list;
     InventoryAdapter adapter;
@@ -60,7 +68,7 @@ public class Inventory extends AppCompatActivity {
     String buttonText;
     File filepath;
     LocalDB localDB;
-
+    boolean isInventoryRunning = false;
     Handler handler;
     Button Search, Submit, NewBtn, Back_Btn;
 
@@ -130,9 +138,13 @@ public class Inventory extends AppCompatActivity {
             }
         };
         looperDemo = new LooperDemo();
-        iuhfService = UHFManager.getUHFService(this);
+        try {
+            //iuhfService = UHFManager.getUHFService(this);
 //        iuhfService.setAntennaPower(30);
-        iuhfService.setFrequency(865);
+           // iuhfService.setFrequency(865);
+        } catch (Exception e){
+            Log.d("Exception",e.toString());
+        }
 
         Search.setOnClickListener(v -> {
             Button b = (Button) v;
@@ -288,6 +300,7 @@ public class Inventory extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(Inventory.this, "" + error, Toast.LENGTH_SHORT).show();
+                Log.d("Error", String.valueOf(error));
                 dialog.dismiss();
             }
         });
@@ -316,16 +329,49 @@ public class Inventory extends AppCompatActivity {
                     iuhfService.selectCard(1, "", false);
                     iuhfService.inventoryStart();
                     Search.setText("STOP");
-                    iuhfService.setOnInventoryListener(var1 -> {
 
-                        result = var1.getEpc();
+                    iuhfService.setOnInventoryListener(new OnSpdInventoryListener() {
+                        @Override
+                        public void getInventoryData(SpdInventoryData var1) {
+                            result = var1.getEpc();
                         looperDemo.execute(() -> {
                             Message message = Message.obtain();
                             message.obj = result;
                             handler.sendMessage(message);
                         });
 
+                        try {
+                                long timeMillis = System.currentTimeMillis();
+                                long l = timeMillis - lastTimeMillis;
+                                if (l < 100) {
+                                    return;
+                                }
+                                lastTimeMillis = System.currentTimeMillis();
+                                soundPool.play(soundId, 1, 1, 0, 0, 1);
+
+
+                            } catch (Exception e){
+                                Log.d("exception",e.toString());
+                            }
+                        }
+
+                        @Override
+                        public void onInventoryStatus(int i) {
+
+                        }
                     });
+
+
+//                    iuhfService.setOnInventoryListener(var1 -> {
+//
+//                        result = var1.getEpc();
+//                        looperDemo.execute(() -> {
+//                            Message message = Message.obtain();
+//                            message.obj = result;
+//                            handler.sendMessage(message);
+//                        });
+//
+//                    });
 
                 } else {
                     iuhfService.inventoryStop();
@@ -366,8 +412,7 @@ public class Inventory extends AppCompatActivity {
             listreport.clear();
             for (int i = 0; i < list.size(); i++) {
                 if (list.get(i).getStatusF() == "True") {
-
-                    listreport.add(new ReportModel(list.get(i).getTaG_ID(), "0100", devicename, String.valueOf(now)));
+                    listreport.add(new ReportModel(list.get(i).getTaG_ID(), "0100", devicename, String.valueOf(now),list.get(i).asseT_ID,list.get(i).asset));
                 }
             }
 
@@ -380,6 +425,8 @@ public class Inventory extends AppCompatActivity {
             jsonObject.put("location", listreport.get(i).getLocation());
             jsonObject.put("hhrId", listreport.get(i).getHhrId());
             jsonObject.put("readTime", listreport.get(i).getReadTime());
+            jsonObject.put("asset_Id",listreport.get(i).getAssetID());
+            jsonObject.put("assetName",listreport.get(i).getAssetName());
             array.put(jsonObject);
         }
 
@@ -500,5 +547,37 @@ public class Inventory extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         startActivity(new Intent(Inventory.this, MainActivity.class));
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        stopInventoryService();
+    }
+
+    private void stopInventoryService() {
+        iuhfService.closeDev();
+
+    }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        initializeUHF();
+    }
+
+    @SuppressLint("ResourceAsColor")
+    private void initializeUHF() {
+        try {
+            iuhfService = UHFManager.getUHFService(this);
+            iuhfService.openDev();
+            iuhfService.setAntennaPower(30);
+
+            // iuhfService.setFrequency(2);
+
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(),e.toString(),Toast.LENGTH_SHORT).show();
+        }
     }
 }

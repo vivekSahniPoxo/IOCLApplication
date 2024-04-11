@@ -1,9 +1,14 @@
 package com.example.ioclapplication;
 
 public class ApiUrl {
-    public static String baseUrl = "http://164.52.223.163:4510/api/";
+  //  public static String baseUrl = "http://164.52.223.163:4510/api/";
 
-//    public static String baseUrl =  "http://mudvprfidiis:82/api/";
+
+    //public static String baseUrl = "http://10.146.65.128:82/api/"; //IOCL Server URL
+
+    //public static String baseUrl =  "http://mudvprfidiis:82/api/";
+
+    public static String baseUrl =   "http://164.52.223.163:4510/api/";
 
     public static final String SearchApi = baseUrl + "GetAssetInfoBySearch?AssetId=";
     public static final String IdentifyApi = baseUrl + "GetAssetInfoBySearch?RfidTagId=";
